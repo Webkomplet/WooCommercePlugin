@@ -1,6 +1,6 @@
 === Mail Komplet ===
 Contributors: martinpolak
-Tags: comments, spam
+Tags: woocommerce, ecommerce, e-commerce, newsletter
 Requires at least: 4.9.1
 Tested up to: 4.9.1
 License: GPLv2 or later
