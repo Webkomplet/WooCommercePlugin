@@ -25,7 +25,7 @@ class Mail_Komplet_Api_Caller {
                 break;
             default:
         }
-        curl_setopt($curl, CURLOPT_URL, 'https://api.mail-komplet.cz/api/' . $baseCrypt . '/' . $url);
+        curl_setopt($curl, CURLOPT_URL, 'http://api2.mail-komplet.cz/api/' . $baseCrypt . '/' . $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         
         $header = array(
