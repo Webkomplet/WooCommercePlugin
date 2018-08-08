@@ -14,9 +14,9 @@
  *
  * @wordpress-plugin
  * Plugin Name:       Mail Komplet
- * Plugin URI:        https://www.mail-komplet.cz/
+ * Plugin URI:        https://github.com/Webkomplet/WooCommercePlugin/tree/master/mail-komplet
  * Description:       This plugin will connect your WooCommerce shop to your account on Mail Komplet.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            Webkomplet, s.r.o.
  * Author URI:        https://www.webkomplet.cz/
  * License:           GPL-2.0+
@@ -41,7 +41,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
      * Start at version 1.0.0 and use SemVer - https://semver.org
      * Rename this for your plugin and update it as you release new versions.
      */
-    define( 'MAILKOMPLET_PLUGIN_NAME_VERSION', '1.0.0' );
+    define( 'MAILKOMPLET_PLUGIN_NAME_VERSION', '1.1.0' );
     
     /**
      * The code that runs during plugin activation.

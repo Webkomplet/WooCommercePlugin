@@ -141,14 +141,53 @@ class Mail_Komplet_Public {
 	    $base_crypt = (isset($options['base-crypt']) ? $options['base-crypt'] : '');
 	    $mailing_list_id = (isset($options['mailing-list-id']) ? $options['mailing-list-id'] : null);
 	    
-	    $data = array(
+        $order = wc_get_order($order_id);
+        $order_items = $this->get_order_items($order);
+        $order_date = $order->get_date_created()->date('Y-m-d H:i:s');
+	    
+	    $contact_data = array(
 	        'email' => $data['billing_email'],
 	        'name' => $data['billing_first_name'],
 	        'surname' => $data['billing_last_name'],
 	        'mailingListIds' => array(0 => $mailing_list_id),
 	    );
 	    
-	    Mail_Komplet_Api_Caller::mail_komplet_api_call($api_key, $base_crypt, 'POST', 'contacts/', $data);
+	    $order_data = array(
+	        array(
+    	        'email' => $data['billing_email'],
+    	        'created' => $order_date,
+    	        'items' => $order_items,
+                'orderId' => $order_id
+	        )
+	    );
+
+	    Mail_Komplet_Api_Caller::mail_komplet_api_call($api_key, $base_crypt, 'POST', 'contacts', $contact_data);
+	    
+	    Mail_Komplet_Api_Caller::mail_komplet_api_call($api_key, $base_crypt, 'POST', 'orders/json', $order_data);
+	}
+	
+	private function get_order_items($order) {
+	    $order_items = array();
+	    foreach ($order->get_items() as $order_item) {
+	        $product = $order_item->get_product();
+	        // get category name by product ID
+	        $terms = get_the_terms($product->get_id(), 'product_cat');
+	        $category = null;
+	        if (!empty($terms)) {
+    	        foreach ($terms as $term) {
+    	            $category = $term->name;
+    	            break;
+    	        }
+	        }
+	        // set up order item properties
+	        $order_item = array(
+	            'name' => $product->get_name(),
+	            'amount' => wc_stock_amount($order_item['quantity']),
+	            'category' => $category
+	        );
+	        $order_items[] = $order_item;
+	    }
+	    return $order_items;
 	}
 	
 	/**
