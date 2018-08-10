@@ -12,33 +12,31 @@ class Mail_Komplet_Api_Caller {
      */
     public static function mail_komplet_api_call($apiKey, $baseCrypt, $method, $url, $data = null)
     {
-        $curl = curl_init();
+        $apiUrl = 'http://api2.mail-komplet.cz/api/' . $baseCrypt . '/' . $url;
+        $args = array(
+            'headers' => array(
+                'accept' => 'application/json;charset:utf-8',
+                'content-type' => 'application/json;charset=UTF-8',
+                'x-requested-with' => 'XMLHttpRequest',
+                'authorization' => 'Basic ' . $apiKey
+            )
+        );
         switch ($method)
         {
             case "POST":
-                curl_setopt($curl, CURLOPT_POST, 1);
+                $args['method'] = 'POST';
                 if ($data)
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+                    $args['body'] = json_encode($data);
                     break;
             case "PUT":
-                curl_setopt($curl, CURLOPT_PUT, 1);
+                $args['method'] = 'PUT';
                 break;
             default:
         }
-        curl_setopt($curl, CURLOPT_URL, 'http://api2.mail-komplet.cz/api/' . $baseCrypt . '/' . $url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         
-        $header = array(
-            "Accept: application/json;charset:utf-8",
-            "Content-Type: application/json;charset=UTF-8",
-            "X-Requested-With: XMLHttpRequest",
-            "Authorization: Basic {$apiKey}"
-        );
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        
-        $result = curl_exec($curl);
-        curl_close($curl);
-        return $result;
+        require_once dirname(dirname(dirname(dirname(dirname( __FILE__ ))))) . '/wp-load.php';
+        $response = wp_remote_get($apiUrl, $args);
+        $reponse_body = wp_remote_retrieve_body($response);
+        return $reponse_body;
     }
 }
